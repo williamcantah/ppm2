@@ -1,0 +1,982 @@
+/********** Template CSS **********/
+:root {
+/*-- COLOR VARIABLES --*/
+--my-blue:            #FF0000;
+--my-yellow:          #e5bf00;
+--my-gold:            #ae8f00;
+--my-white:           #fff;
+
+--DarkGrey:           #143053;
+--PaleGrey:           #143053;
+--my-green:          #143053;
+--my-coral:          #CC0000;
+}
+
+h1, .page-title, .label-new {
+  color: var(--my-yellow);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+}
+
+
+
+If you need more control over the appearance of your plots, you can use CSS to style the HTML output. Create a CSS file to adjust the plot size and add it to your R Markdown file.
+
+**styles.css:**
+
+/* styles.css */
+.plot-container {
+  max-width: 50%;
+  height: auto;
+}
+
+
+.fw-medium {
+    font-weight: 500 !important;
+}
+
+.fw-bold {
+    font-weight: 700 !important;
+}
+
+.fw-black {
+    font-weight: 900 !important;
+}
+
+.back-to-top {
+    position: fixed;
+    display: none;
+    right: 45px;
+    bottom: 45px;
+    z-index: 99;
+}
+/*-- LINKS/ANCHORS --*/
+a {
+  color:              var(--my-coral);
+  border-bottom:      3px solid var(--my-coral);
+  line-height:        2rem;
+}
+
+a:hover { border-bottom: none; }
+
+/*-- HORIZONTAL BARS --*/
+hr {
+  content:            '';
+  display:            block;
+  border:             none;
+  background-color:   #ae8f00;
+  height:             0.08em;
+}
+/*-- HEADINGS --*/
+.remark-slide-content h1 {
+  color:              var(--my-blue);
+  font-weight:        300;
+  line-height:        1em;
+}
+.remark-slide-content h2 {
+  /*font-size:          30px;*/
+  /*font-size:          1.4em;*/
+  font-weight:        300;
+  color:              var(--my-blue);
+  line-height:        1em;
+  letter-spacing:     0.02em;
+}
+
+
+.my-coral {color:     var(--my-coral);}
+
+.my-white {
+  color:              var(--my-white);
+  font-family:        "Lora", serif;
+  font-size:          2.2em;
+  line-height:        1em;
+  font-weight:        600;
+}
+/*-- PARAGRAPH TEXT --*/
+.remark-slide-content {
+  font-size:          20px;
+  line-height:        1.8em;
+  text-align: justify;
+}
+
+/*** Spinner ***/
+#spinner {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .5s ease-out, visibility 0s linear .5s;
+    z-index: 99999;
+}
+
+#spinner.show {
+    transition: opacity .5s ease-out, visibility 0s linear 0s;
+    visibility: visible;
+    opacity: 1;
+}
+
+
+/*** Button ***/
+.btn {
+    font-weight: 500;
+    transition: .5s;
+}
+
+.btn.btn-primary,
+.btn.btn-secondary {
+    color: #red;
+}
+
+.btn-square {
+    width: 38px;
+    height: 38px;
+}
+
+.btn-sm-square {
+    width: 32px;
+    height: 32px;
+}
+
+.btn-lg-square {
+    width: 48px;
+    height: 48px;
+}
+
+.btn-square,
+.btn-sm-square,
+.btn-lg-square {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: normal;
+}
+/* styles.css */
+
+
+/*** Navbar ***/
+.navbar .dropdown-toggle::after {
+    border: none;
+    content: "\f107";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    margin-right: 30px;
+    padding: 25px 0;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: 500;
+    text-transform: uppercase;
+    outline: none;
+}
+
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link.active {
+    color: var(--primary);
+}
+
+@media (max-width: 991.98px) {
+    .navbar-light .navbar-nav .nav-link  {
+        margin-right: 0;
+        padding: 10px 0;
+    }
+
+    .navbar-light .navbar-nav {
+        border-top: 1px solid #red;
+    }
+}
+
+.navbar-light .navbar-brand,
+.navbar-light a.btn {
+    height: 75px;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: var(--dark);
+    font-weight: 500;
+}
+
+.navbar-light.sticky-top {
+    top: -100px;
+    transition: .5s;
+}
+
+@media (min-width: 992px) {
+    .navbar .nav-item .dropdown-menu {
+        display: block;
+        border: none;
+        margin-top: 0;
+        top: 150%;
+        opacity: 0;
+        visibility: hidden;
+        transition: .5s;
+    }
+
+    .navbar .nav-item:hover .dropdown-menu {
+        top: 100%;
+        visibility: visible;
+        transition: .5s;
+        opacity: 1;
+    }
+}
+
+
+/*** Header ***/
+@media (max-width: 768px) {
+    .header-carousel .owl-carousel-item {
+        position: relative;
+        min-height: 500px;
+    }
+    
+    .header-carousel .owl-carousel-item img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .header-carousel .owl-carousel-item h5,
+    .header-carousel .owl-carousel-item p {
+        font-size: 14px !important;
+        font-weight: 400 !important;
+    }
+
+    .header-carousel .owl-carousel-item h1 {
+        font-size: 30px;
+        font-weight: 600;
+    }
+}
+
+.header-carousel .owl-nav {
+    position: absolute;
+    width: 200px;
+    height: 45px;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-carousel .owl-nav .owl-prev,
+.header-carousel .owl-nav .owl-next {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    background: transparent;
+    border: 1px solid #FFFFFF;
+    font-size: 22px;
+    transition: .5s;
+}
+
+.header-carousel .owl-nav .owl-prev:hover,
+.header-carousel .owl-nav .owl-next:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.header-carousel .owl-dots {
+    position: absolute;
+    height: 45px;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-carousel .owl-dot {
+    position: relative;
+    display: inline-block;
+    margin: 0 5px;
+    width: 15px;
+    height: 15px;
+    background: transparent;
+    border: 1px solid #red;
+    transition: .5s;
+}
+
+.header-carousel .owl-dot::after {
+    position: absolute;
+    content: "";
+    width: 5px;
+    height: 5px;
+    top: 4px;
+    left: 4px;
+    background: transparent;
+    border: 1px solid #red;
+}
+
+.header-carousel .owl-dot.active {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.page-header {
+    background: linear-gradient(rgba(53, 53, 53, .7), rgba(53, 53, 53, .7)), url(../img/carousel-1.jpg) center center no-repeat;
+    background-size: cover;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    color: var(--light);
+}
+
+
+/*** Section Title ***/
+.section-title h1 {
+    position: relative;
+    display: inline-block;
+    padding: 0 60px;
+}
+
+.section-title.text-start h1 {
+    padding-left: 0;
+}
+
+.section-title h1::before,
+.section-title h1::after {
+    position: absolute;
+    content: "";
+    width: 45px;
+    height: 5px;
+    bottom: 0;
+    background: var(--dark);
+}
+
+.section-title h1::before {
+    left: 0;
+}
+
+.section-title h1::after {
+    right: 0;
+}
+
+.section-title.text-start h1::before {
+    display: none;
+}
+
+
+/*** About ***/
+@media (min-width: 992px) {
+    .container.about {
+        max-width: 100% !important;
+    }
+
+    .about-text  {
+        padding-right: calc(((100% - 960px) / 2) + .75rem);
+    }
+}
+
+@media (min-width: 1200px) {
+    .about-text  {
+        padding-right: calc(((100% - 1140px) / 2) + .75rem);
+    }
+}
+
+@media (min-width: 1400px) {
+    .about-text  {
+        padding-right: calc(((100% - 1320px) / 2) + .75rem);
+    }
+}
+
+
+/*** Service ***/
+.service-item img {
+    transition: .5s;
+}
+
+.service-item:hover img {
+    transform: scale(1.1);
+}
+
+
+/*** Feature ***/
+@media (min-width: 992px) {
+    .container.feature {
+        max-width: 100% !important;
+    }
+
+    .feature-text  {
+        padding-left: calc(((100% - 960px) / 2) + .75rem);
+    }
+}
+
+@media (min-width: 1200px) {
+    .feature-text  {
+        padding-left: calc(((100% - 1140px) / 2) + .75rem);
+    }
+}
+
+@media (min-width: 1400px) {
+    .feature-text  {
+        padding-left: calc(((100% - 1320px) / 2) + .75rem);
+    }
+}
+
+
+/*** Project Portfolio ***/
+#portfolio-flters li {
+    display: inline-block;
+    font-weight: 500;
+    color: var(--dark);
+    cursor: pointer;
+    transition: .5s;
+    border-bottom: 2px solid transparent;
+}
+
+#portfolio-flters li:hover,
+#portfolio-flters li.active {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.portfolio-item img {
+    transition: .5s;
+}
+
+.portfolio-item:hover img {
+    transform: scale(1.1);
+}
+
+.portfolio-item .portfolio-overlay {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 0;
+    height: 0;
+    bottom: 0;
+    left: 50%;
+    background: rgba(53, 53, 53, .7);
+    transition: .5s;
+}
+
+.portfolio-item:hover .portfolio-overlay {
+    width: 100%;
+    height: 100%;
+    left: 0;
+}
+
+.portfolio-item .portfolio-overlay .btn {
+    opacity: 0;
+}
+
+.portfolio-item:hover .portfolio-overlay .btn {
+    opacity: 1;
+}
+
+
+/*** Quote ***/
+@media (min-width: 992px) {
+    .container.quote {
+        max-width: 100% !important;
+    }
+
+    .quote-text  {
+        padding-right: calc(((100% - 960px) / 2) + .75rem);
+    }
+}
+
+@media (min-width: 1200px) {
+    .quote-text  {
+        padding-right: calc(((100% - 1140px) / 2) + .75rem);
+    }
+}
+
+@media (min-width: 1400px) {
+    .quote-text  {
+        padding-right: calc(((100% - 1320px) / 2) + .75rem);
+    }
+}
+
+
+/*** Team ***/
+.team-item img {
+    transition: .5s;
+}
+
+.team-item:hover img {
+    transform: scale(1.1);
+}
+
+.team-item .team-social {
+    position: absolute;
+    width: 38px;
+    top: 50%;
+    left: -38px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    background: #FFFFFF;
+    transition: .5s;
+}
+
+.team-item .team-social .btn {
+    color: var(--primary);
+    background: #FFFFFF;
+}
+
+.team-item .team-social .btn:hover {
+    color: #FFFFFF;
+    background: var(--primary);
+}
+
+.team-item:hover .team-social {
+    left: 0;
+}
+
+
+/*** Testimonial ***/
+.testimonial-carousel::before {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+    z-index: 1;
+}
+
+.testimonial-carousel::after {
+    position: absolute;
+    content: "";
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 0;
+    background: linear-gradient(to left, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+    z-index: 1;
+}
+
+@media (min-width: 768px) {
+    .testimonial-carousel::before,
+    .testimonial-carousel::after {
+        width: 200px;
+    }
+}
+
+@media (min-width: 992px) {
+    .testimonial-carousel::before,
+    .testimonial-carousel::after {
+        width: 300px;
+    }
+}
+
+.testimonial-carousel .owl-item .testimonial-text {
+    border: 5px solid var(--light);
+    transform: scale(.8);
+    transition: .5s;
+}
+
+.testimonial-carousel .owl-item.center .testimonial-text {
+    transform: scale(1);
+}
+
+.testimonial-carousel .owl-nav {
+    position: absolute;
+    width: 350px;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: space-between;
+    opacity: 0;
+    transition: .5s;
+    z-index: 1;
+}
+
+.testimonial-carousel:hover .owl-nav {
+    width: 300px;
+    opacity: 1;
+}
+
+.testimonial-carousel .owl-nav .owl-prev,
+.testimonial-carousel .owl-nav .owl-next {
+    position: relative;
+    color: var(--primary);
+    font-size: 45px;
+    transition: .5s;
+}
+
+.testimonial-carousel .owl-nav .owl-prev:hover,
+.testimonial-carousel .owl-nav .owl-next:hover {
+    color: var(--dark);
+}
+
+
+/*** Contact ***/
+@media (min-width: 992px) {
+    .container.contact {
+        max-width: 100% !important;
+    }
+
+    .contact-text  {
+        padding-left: calc(((100% - 960px) / 2) + .75rem);
+    }
+}
+
+@media (min-width: 1200px) {
+    .contact-text  {
+        padding-left: calc(((100% - 1140px) / 2) + .75rem);
+    }
+}
+
+@media (min-width: 1400px) {
+    .contact-text  {
+        padding-left: calc(((100% - 1320px) / 2) + .75rem);
+    }
+}
+
+
+/*** Footer ***/
+.footer {
+    background: linear-gradient(rgba(53, 53, 53, .7), rgba(53, 53, 53, .7)), url(../img/footer.jpg) center center no-repeat;
+    background-size: cover;
+}
+
+.footer .btn.btn-social {
+    margin-right: 5px;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--light);
+    border: 1px solid #FFFFFF;
+    transition: .3s;
+}
+
+.footer .btn.btn-social:hover {
+    color: var(--primary);
+}
+
+
+.footer .btn.btn-link {
+    display: block;
+    margin-bottom: 5px;
+    padding: 0;
+    text-align: left;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: normal;
+    text-transform: capitalize;
+    transition: .3s;
+}
+
+.footer .btn.btn-link::before {
+    position: relative;
+    content: "\f105";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    margin-right: 10px;
+}
+
+.footer .btn.btn-link:hover {
+    color: var(--primary);
+    letter-spacing: 1px;
+    box-shadow: none;
+}
+
+.footer .copyright {
+    padding: 25px 0;
+    font-size: 15px;
+    border-top: 1px solid rgba(256, 256, 256, .1);
+}
+
+.footer .copyright a {
+    color: var(--light);
+}
+
+.footer .copyright a:hover {
+    color: var(--primary);
+}
+
+/* Target inline R code */
+code.r {
+  color: red;
+  font-size: 1.2em;
+}
+
+/* Target R code blocks */
+pre code {
+  color: red;
+  font-size: 1.2em;
+}
+
+h1 {
+  border-bottom: 3px solid #red;
+}
+
+
+pre, code {
+  white-space: pre;        /* Preserves formatting, including line breaks */
+  overflow-x: auto;        /* Enables horizontal scrollbars */
+  overflow-y: auto;        /* Enables vertical scrollbars */
+  max-width: 100%;         /* Ensures the output does not overflow the container */
+  max-height: 300px;       /* You can adjust the height limit as needed */
+}
+
+/*-- In-line highlighting within text --*/
+.remark-code, .remark-inline-code {
+  font-size:          90%;
+  color:              var(--my-blue);
+  background:         var(--PaleGrey);
+  border-radius:      1px;
+  padding:            1.2px 1.2px 1.2px 1.2px;
+  overflow-x:       auto;
+}
+
+.remark-slide-content h3 {
+  /*font-size:          1em;*/
+  font-weight:        500;
+  color:              var(--my-blue);
+  line-height:        1em;
+}
+
+/*-- PARAGRAPH TEXT --*/
+.remark-slide-content {
+  font-size:          1.5rem;
+  line-height:        1.2em;
+}
+
+
+/*-- INVERSE SLIDE MODIFICATIONS --*/
+
+/*-- Slide background and text (inverse) --*/
+.inverse {
+  background-color:   var(--my-blue);
+  color:              var(--PaleGrey);
+  text-shadow:        none;
+}
+
+/*-- Headings (inverse) --*/
+.inverse h1, .inverse h2, .inverse h3 { color: var(--PaleGrey); }
+
+.inverse h2, .inverse h3 { 
+    color: var(--PaleGrey); 
+}
+
+/*-- Custom class for the about-me slide --*/
+.about-me-slide h1 {
+  color:              var(--my-gold);
+  font-weight:        600;
+}
+
+.inverse a {
+  color:              var(--my-blue);
+  border-bottom:      1px solid white;
+}
+
+.inverse a:hover { border-bottom: none;}
+
+/*-- Text muting/fading --*/
+.fade { opacity: 0.5; }
+
+/*-- Horizontal bars (inverse) --*/
+.inverse hr { background-color: var(--PaleGrey); }
+
+/*-- Small text --*/
+.small {
+  font-size: 70%;
+}
+
+/* -- CUSTOM CLASSES ---------------------------------------------------------*/
+
+/*-- Custom class for the title slide --*/
+
+.title-slide {
+  color:              var(--my-blue);
+}
+/*-- Headings --*/
+.title-slide h1 {
+  font-size:          1.8em;
+  line-height:        1em;
+  font-weight:        600;
+  color:              var(--my-blue);
+  padding-right:      35%;
+}
+.title-slide h2 {
+  color:              var(--my-blue);
+  font-size:          1.3em;
+}
+.title-slide h3 {
+  color:              var(--my-blue);
+  font-size:          1.1em;
+}
+.directorate {
+  text-align:       right;
+  position:         absolute;
+  bottom:           15%;
+  left:             36%;
+}
+.title-date {
+  position:         absolute;
+  bottom:           10%;
+}
+
+/*-- Hides slide number from title slide --*/
+.title-slide .remark-slide-number { display: none; }
+
+.pull-left-narrow {
+  float: left;
+  width: 20%;
+}
+
+/*-- Layouts --*/
+
+.pull-left-narrow {
+  float: left;
+  width: 20%;
+}
+.pull-right-wide {
+  float: right;
+  width: 75%;
+}
+
+/* Clear floats after the columns */
+.pull-right-wide + * { clear: both; }
+
+
+/*-- PROGRESS BAR IN FOOTER --*/
+/* https://github.com/yihui/xaringan/wiki/Progressbar */
+
+.remark-slide-number { position: inherit; }
+
+.remark-slide-number .progress-bar-container {
+  position:           absolute;
+  bottom:             0;
+  height:             5px;
+  display:            block;
+  left:               0;
+  right:              0;
+}
+
+.remark-slide-number .progress-bar {
+  height: 100%;
+  background-color: var(--my-yellow);
+}
+
+/*-- CODE TEXT ---------------------------------------------------------------*/
+
+/*-- In-line highlighting within text --*/
+.remark-code, .remark-inline-code {
+  font-size:          80%;
+  color:              var(--my-blue);
+  background:         var(--PaleGrey);
+  border-radius:      3px;
+  padding:            1px 1px 1px 1px;
+}
+
+/*-- Line highlighting within code --*/
+.remark-code-line-highlighted {
+  background-color:   var(--PaleGrey);
+}
+
+/*-- CODE CHUNKS --*/
+
+/*-- Code chunk background layer --*/
+
+pre {
+  border:           0.1px solid #fff;
+  box-shadow:       0px 0px 4px #79beee;
+  padding:          0.25em;
+  background-color: #fff;
+  overflow-x:       auto;                       /* enable horizontal scrolling with overflow */
+  border-radius:    0px;                        /*undo rounded corners*/
+}
+
+/*--  --*/
+pre code {
+  background:         none;
+  font-size:          0.8rem;
+}
+
+/* ==========================================================================
+   UCC Branding (logo top-left) + Page Numbers (bottom-right) for xaringan/remark
+   --------------------------------------------------------------------------
+   Usage:
+     - Keep this CSS in your YAML: `css: ["style2_ucc.css"]`
+     - Logo file expected at: assets/ucc-logo.png (included in the ZIP)
+     - To hide the logo on a specific slide, add class: `.no-logo`
+   ========================================================================== */
+
+/* Adjustable vars */
+:root{
+  --ucc-logo-size: 72px;      /* tweak size */
+  --ucc-logo-offset-x: 12px;  /* left padding */
+  --ucc-logo-offset-y: 12px;  /* top padding  */
+  --ucc-number-bg: rgba(255,255,255,0.85);
+  --ucc-number-fg: #143053;
+  --ucc-number-radius: 6px;
+  --ucc-number-pad-v: 2px;
+  --ucc-number-pad-h: 8px;
+  --ucc-number-font: 0.9rem;
+}
+
+/* Put the UCC logo on every slide */
+.remark-slide-content::before{
+  content: "";
+  position: absolute;
+  top: var(--ucc-logo-offset-y);
+  left: var(--ucc-logo-offset-x);
+  width: var(--ucc-logo-size);
+  height: var(--ucc-logo-size);
+  background-image: url("assets/ucc-logo.png");
+  background-repeat: no-repeat;
+  background-position: top left;
+  background-size: contain;
+  z-index: 1000;
+  pointer-events: none; /* allow clicks through */
+}
+
+/* Slightly larger on title slide (optional) */
+.title-slide::before{
+  width: calc(var(--ucc-logo-size) + 8px);
+  height: calc(var(--ucc-logo-size) + 8px);
+}
+
+/* Allow hiding on specific slides with `.no-logo` class */
+.no-logo::before{
+  display: none !important;
+}
+
+/* Bottom-right page number pill */
+.remark-slide-number{
+  position: absolute !important;
+  right: 14px;
+  bottom: 10px;
+  z-index: 1000;
+  color: var(--ucc-number-fg);
+  background: var(--ucc-number-bg);
+  padding: var(--ucc-number-pad-v) var(--ucc-number-pad-h);
+  border-radius: var(--ucc-number-radius);
+  font-size: var(--ucc-number-font);
+  box-shadow: 0 0 0 transparent;
+}
+
+/* Keep the progress bar behavior if used */
+.remark-slide-number .progress-bar-container{
+  position: absolute;
+  left: 0; right: 0; bottom: -6px;
+  height: 4px;
+}
+
+/* Hide number on title slide as before */
+.title-slide .remark-slide-number{ display: none; }
+
+/* Print adjustments */
+@media print{
+  .remark-slide-content::before{
+    top: 8mm; left: 8mm;
+    width: 18mm; height: 18mm;
+  }
+  .remark-slide-number{
+    right: 10mm; bottom: 8mm;
+  }
+}

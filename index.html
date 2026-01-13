@@ -1,0 +1,2022 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Public Policy Modelling</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="William Godfred Cantah (Ph.D)" />
+    <meta name="date" content="2026-01-13" />
+    <script src="libs/header-attrs-2.30/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/panelset-0.3.0/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset-0.3.0/panelset.js"></script>
+    <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style2_ucc_embedded.css" type="text/css" />
+    <link rel="stylesheet" href="css/rutgers-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+class: title-slide, middle
+background-image: url(fig/pg.png)
+background-position:center
+background-size: contain
+
+# **Public Policy Modelling**
+### Lecture Notes 2025
+### 
+
+.directorate[
+William Godfred Cantah (Ph.D) &lt;br&gt;
+Department of Data Science and Economic Policy &lt;br&gt;
+School of Economics, UCC
+]
+
+
+---
+layout: true
+background-image: url(fig/pg.png)
+background-size: contain
+background-position: center
+
+
+---
+layout: true
+background-image: url(fig/pg.png)
+background-size: contain
+background-position: center
+---
+---
+class: inverse center middle
+
+# &lt;p style="font-size:60px; font-weight:bold"&gt;Causal design I: Difference in Difference for policy 
+
+---
+
+layout: true
+background-image: url(fig/pg.png)
+background-size: contain
+background-position: center
+---
+# What is Difference in Difference (DiD)?
+
+&lt;div style= "font-size: 24px;"&gt;
+
+--
+.pull-left[
+- The core promise behind DiD has to do with isolating an effect by differencing out common trends.
+
+- DiD method estimates, the causal effect of an intervention by comparing the change in outcome overtime between treatment group and control group.
+
+- The key identifying assumption is .my-coral[parallel trends]: in the absence of the intervention, the outcome in the treated group would have followed the same trend as the control group. 
+
+- The DiD estimator is difference between the observed post-intervention outcome for the treated group and the unobserved conterfactual. 
+
+]
+
+--
+.pull-right[
+
+.center[&lt;img src="img/did1.png" width="100%"/&gt;]
+
+]
+
+---
+# What question does DiD answer?
+&lt;div style= "font-size: 26px;"&gt;
+
+--
+
+- The DiD is a quasi-experimental design used to estimate causal effects of a treatment or intervention by comparing the changes in outcomes over time between a treatment group and a control group.
+
+
+- DiD answers the question: "What is the effect of a treatment or intervention on an outcome variable, while controlling for time trends and other confounding factors?"
+
+--
+
+- It helps to isolate the impact of the treatment by comparing the changes in outcomes over time between the treatment and control groups.
+
+--
+
+- DiD targets causal effects when some units adopt a policy and others do not, using changes over time to difference out fixed confounders.
+
+--
+
+- It is particularly useful when random assignment to treatment and control groups is not feasible, allowing researchers to infer causality from observational data.
+
+--
+
+- DiD is commonly used in policy analysis, economics, and social sciences to evaluate the impact of various interventions, such as changes in laws, regulations, or programs.
+
+---
+# Key Assumptions
+&lt;div style= "font-size: 30px;"&gt;
+--
+
+- The key assumption of DiD is the "parallel trends" assumption, which states that in the absence of treatment, the treatment and control groups would have experienced similar trends in outcomes over time.
+
+&lt;br&gt;
+--
+
+- This assumption allows researchers to attribute any differences in outcomes between the two groups after the treatment to the effect of the treatment itself.
+
+&lt;br&gt;
+--
+
+- DiD can be implemented using regression analysis, where the treatment effect is estimated as the coefficient of an interaction term between a treatment indicator and a time indicator.
+
+---
+# The Canonical `\(2 \times 2\)` Model
+&lt;div style= "font-size: 27px;"&gt;
+--
+
+- The canonical `\(2 \times2\)` model is a simple yet elegant way of capturing causal effect. 
+
+--
+
+- In the two group, twop period case `\((2 \times2)\)`, the DiD estimate can be calculated directly from group means or estimated via a simple regression:
+
+--
+
+`$$Y_{it} =\beta_0 +\beta_1 Post_t + \beta_2  Treat_i + \beta_3 (Post_t\times Treat_i) + ε_{it}$$`
+  
+- Where:
+  - `\(Y_{it}\)` is the outcome variable for unit i at time t.
+  
+  - `\(Post_t\)` is a binary indicator for the post-treatment period.
+  
+  - `\(Treat_i\)` is a binary indicator for the treatment group.
+  
+  - `\((Post_t\times Treat_i)\)` is the interaction term that captures the treatment effect.
+  
+  - `\(ε_{it}\)` is the error term.
+
+
+---
+# The Canonical `\(2 \times 2\)` Model
+&lt;div style= "font-size: 24px;"&gt;
+--
+
+- The coefficient of interest, `\(\beta_3\)` is the DiD estimator:
+`$$\hat{\beta_3}=(\bar{Y}_{Treated,Post}-\bar{Y}_{Treated,  Pre})-(\bar{Y}_{control,Post}-\bar{Y}_{Control, Pre})$$`
+--
+
+### Archetypal Example: Card &amp; Krueger (1994)
+
+- This seminal study examined the effect of a minimum wage increase in New Jersey on employment in fast-food restaurants. 
+
+  - .my-coral[Treatement Group:] New Jersey restaurants.
+  
+  - .my-coral[Control Group:] Restaurants in adjacent Pennsylvania, where the minimum wage did not change.
+  
+  - .my-coral[Outcome:] Full-time equivalent employment 
+  
+  - .my-coral[Findings:] The DiD estimate suggested the minimum wage increase did not cause decrease in employment, challenging conventional theory.
+
+
+---
+# Complications
+&lt;div style= "font-size: 28px;"&gt;
+
+--
+
+- The simple `\(2\times 2\)` framework assumes a single treatment introduced at a single point in time. 
+
+--
+
+- In practice, policies, programmes, and events are often implemented at different times for different groups. This is known as .my-coral[***staggered treatment adoption***]
+
+--
+
+- This variation in treatment timing is a valuable source of information, but it fundamentally complicates the estimation of a single, clear treatment effect. 
+
+--
+
+.center[&lt;img src="img/did2.png" width="800"/&gt;]
+
+---
+# The Two-Way Fixed Effects (TWFE) Model
+&lt;div style= "font-size: 28px;"&gt;
+
+--
+
+- For many years, the standard approach for DiD with staggered adoption and panel data was the TWFE model:
+
+--
+
+`$$Y_{it}=\alpha_i + \lambda_t +\delta D_{it}+\varepsilon_{it}$$`
+--
+
+  - `\(\alpha_i\)` are unit fixed effects, controlling for time-invariant differences between units.
+
+--
+
+  - `\(\lambda_t\)` are time fixed effects, controlling for common shocks affecting all units in a given period. 
+
+--
+
+  - `\(D_{it}\)` is a binary indicator equal to `\(1\)` if unit `\(i\)` is treated in period `\(t.\)`
+  
+--
+
+- The coefficient `\(\delta\)` was widely interpreted as the average treatment effect on the Treated (ATT).
+
+--
+
+- This seemed like a '*mostly harmless*' and elegant extension of the `\(2 \times 2\)` case
+
+---
+# The Pitfall with TWFE
+&lt;div style= "font-size: 23px;"&gt;
+
+--
+.pull-left[
+- Recent econometric research (.my-coral[Goodman-Bacon (2021); de Chaisemartin &amp; D' Haultfoeuille (2020); Sun &amp; Abraham (2021)]) has revealed that the TWFE coefficient of `\(\delta\)` is not a straightforward average of treatment effects.
+- Instead, `\(\delta\)` is a weighted average of every possible `\(2\times\)` DiD comparison in the data.
+- With staggered adoption, this includes problematic comparisons: 'Already-treated' units are used as controls for later units. 
+- If treatment effects are heterogeneous across groups or change over time (dynamic effects), these comparisons can contaminate the estimate. 
+- The weights can even be .my-coral[negative] leading to perverse situations where `\(\delta\)` is negative even if the true effect is positive for all units.
+]
+
+--
+.pull-right[
+
+.center[&lt;img src="img/did3.png" width="800"/&gt;]
+
+]
+
+---
+# Decomposing The TWFE Estimate Reveals the Flaws
+&lt;div style= "font-size: 23px;"&gt;
+
+--
+
+- The Goodman-Bacon decomposition shows that the overall TWFE estimate `\(\hat{\beta}_{DD}\)` is a weighted sum of four types of underlying `\(2\times 2\)` comparisons: 
+
+--
+
+.center[&lt;img src="img/did4.png" width="800"/&gt;]
+
+
+---
+# The New Paradigm 
+&lt;div style= "font-size: 29px;"&gt;
+--
+
+- The modern approach, pioneered by .my-coral[Callaway &amp; Sant'Anna(2021)], avoids the pitfalls of TWFE by adopting a transparent, multi-step process. 
+
+--
+
+- Instead of estimating a single, potentially contaminated coefficient, the methodology is:
+
+--
+
+.center[&lt;img src="img/did5.png" width="800"/&gt;]
+
+--
+
+- This appraoch provides full transpency and avoids the "hidden weihting" problem TWFE.
+
+---
+# Time Average Treatment Effects
+&lt;div style= "font-size: 30px;"&gt;
+--
+
+.pull-left[
+- The core parameter is the Group-Time Average Treatment Effect, `\(ATT(g, t)\)`.
+
+&lt;br&gt;
+
+`$$ATT(g,t)=E[(Y_t(g)-Y_t(0)|G_g=1]$$`
+
+&lt;br&gt;
+
+- This is the average treatment effect for units in group `\(g\)` (first treated in period `\(g\)`) at a specific calendar time `\(t\)`
+
+]
+
+--
+
+.pull-right[
+
+.center[&lt;img src="img/did6.png" width="800"/&gt;]
+
+]
+
+---
+# Modern Semi-Parametric Methods
+&lt;div style= "font-size: 24px;"&gt;
+
+.my-coral[Callaway &amp; Sant'Anna(2021)] and .my-coral[Sant'Anna(2021) &amp; Zhao (2020)] provide three ways to estimate each `\(ATT(g,t)\)`, all of which can flexibly incorporate convariates to satisfy a coditional parallel trends assumptions. 
+
+.three-col[
+.pull-left-3[
+### Outcome Regression (OR)
+Models the evolution of the outcome for the comparison group.
+]
+
+.pull-middle-3[
+### Inverse Probability&lt;br&gt;Weighting (IPW)
+Models the probability of being in a specific treatment group (the propensity score) and reweights the comparison group to match the treated group’s covariate distribution.
+]
+
+.pull-right-3[
+### 🛡️ Doubly Robust (DR)
+Combines both OR and IPW. This approach is generally preferred as it provides a consistent estimate of *ATT(g, t)* if either the outcome model or the propensity score model is correctly specified, but not necessarily both.
+]
+]
+
+---
+# Modern Semi-Parametric Methods
+&lt;div style= "font-size: 30px;"&gt;
+--
+
+- The DR approach offers additional robustness against model misspecification. 
+--
+
+- The DR estimator for `\(ATT(g,t)\)` using a never treated comparison group(C):
+
+`$$ATT(g,t)=E[(\frac{G_g}{E[G_g]}-\frac{p_g(X) C}{(1-p_g(X)E[...])}\times (Y_t-Y_{_g-1})-m_nev(X))]$$`
+--
+
+# From Buiding Blocks to insights
+--
+
+- With the set of `\(ATT(g,t)\)` estimated, we can aggregate them to explore different dimensions of the treatment effect. 
+
+--
+ 
+ 
+- This moves the researcher from estimation to interpretation to tell a story. 
+--
+
+---
+# From Buiding Blocks to insights
+&lt;div style= "font-size: 30px;"&gt;
+
+
+### Popular Aggregation Schemes:
+
+--
+  - ***Event-Study `\((\theta_{es}(e))\)`: ***Average effects by length of exposure to treatment `\((e=t-g).\)` This shows how the effect evolves overtime for a typical treated unit.
+  
+  - ***Group Specific `\((\theta_{sei}(g))\)`:*** Averages effects over all post-treatment periods for specific cohort `\(g\)`. This allows comparison between early and late adopters. 
+  
+  - ***Calendar Times `\((\theta_{c}(t))\)`:*** Averages effects across all groups treated by a specific calendar time `\(t\)`. Useful for assessing impacts during specific economic conditions. 
+  
+  - ***Overall Effect `\((\theta_{Osei})\)`:*** A single summary measure that averages the group-specific effects, weighted by group size. This is the modern, robust analogue to the classic DiD coefficient.  
+
+---
+# Simulated Example in R
+&lt;div style= "font-size: 28px;"&gt;
+### Policy Context
+
+--
+
+- The simulation is framed around LEAP (Livelihood Empowerment Against Poverty)—a Government of Ghana cash transfer programme introduced in 2008 for extremely poor and vulnerable households, with eligibility categories including Orphaned and Vulnerable Children,, persons with severe disability (no productive capacity), and older persons (65+).
+
+--
+
+- The dataset assumes phased district rollout (staggered adoption), consistent with the programme’s gradual expansion pattern.
+
+--
+#### Problem Statement
+
+- Ghana’s social protection budgets are constrained, and policymakers need credible evidence on whether scaling LEAP to additional districts reduces poverty and improves local economic outcomes—beyond what would have happened due to general macro trends.
+
+
+---
+# Simulated Example in R
+&lt;div style= "font-size: 28px;"&gt;
+#### Objectives
+
+--
+
+- Estimate the causal impact of LEAP rollout on district poverty rates.
+
+&lt;br&gt;
+
+--
+
+- Quantify effects on household consumption (per capita, real) as a welfare channel.
+
+&lt;br&gt;
+
+--
+
+- Assess local spillovers on SME employment rates as an economic activity channel.
+
+&lt;br&gt;
+--
+
+- Demonstrate core DiD concepts used in policy modelling: .my-coral[parallel trends, district and year fixed effects, staggered adoption, and clustered standard errors.]
+
+---
+# Simulated Example in R (Variables)
+&lt;div style= "font-size: 24px;"&gt;
+- Key DiD Variables
+  - `ever_treated`: district is ever covered by LEAP within the sample
+  - `treat_year`: first year of LEAP rollout in that district (9999 = not treated in sample)
+  - `post`: 1 if year ≥ treat_year
+  - did: `ever_treated × post` (the DiD treatment indicator)
+- Outcomes 
+  - `poverty_rate` (percent)
+  - `log_real_cons_pc (log` real consumption per capita)
+  - `sme_employment_rate` (percent)
+- Covariates
+  - `urban_share` (percent of district population in urban areas)
+  - `rainfall_anom`, `tot_shock` (stylised macro/commodity shock)
+  - `cocoa_suitability` (proxy for exposure to cocoa value chain)
+  - `leap_intensity_per_1000` (post-adoption intensity measure)
+
+---
+# Simulated Example in R (2x2 DiD)
+&lt;div style= "font-size: 18px;"&gt;
+.pull-left[
+
+``` r
+#Importing Libraries needed
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(broom)
+library(lmtest)
+library(sandwich)
+library(modelsummary)
+library(scales)
+# 1. Load Data --------------------------------------------------------------
+df &lt;- read_xlsx("2by2 leap.xlsx")
+# Quick checks
+stopifnot(all(c("district_id","year","treat","post_2x2","did_2x2") %in% names(df)))
+# Ensure correct types
+df &lt;- df %&gt;%
+  mutate(
+    district_id = as.factor(district_id),
+    year        = as.integer(year),
+    treat       = as.integer(treat),
+    post_2x2    = as.integer(post_2x2),
+    did_2x2     = as.integer(did_2x2),
+    group       = ifelse(treat == 1, "Treated districts (LEAP scaled)", "Control districts (never-treated)"),
+    period      = ifelse(post_2x2 == 1, "Post", "Pre"),
+    ln_pop      = log(population)
+  )
+#str(df)
+```
+
+- This confirms the “2” in 2×2 on the time dimension:
+  - 2011 = Pre period
+  - 2013 = Post period
+- A canonical `\(2×2\)` DiD requires at least one period before and one period after treatment begins.
+]
+.pull-right[
+
+``` r
+# Confirm it is truly 2×2 (2 periods only)
+print(sort(unique(df$year)))
+```
+
+```
+## [1] 2011 2013
+```
+
+``` r
+print(table(df$treat, df$post_2x2))
+```
+
+```
+##    
+##      0  1
+##   0 26 26
+##   1 35 35
+```
+- 26 control districts observed in both 2011 and 2013
+- 35 treated districts observed in both 2011 and 2013
+]
+
+---
+# Simulated Example in R (2x2 DiD)
+.pull-left[
+
+``` r
+# 2) Helper: compute DiD “by hand” from group means ----------
+did_by_hand &lt;- function(data, y){
+  tab &lt;- data %&gt;%
+    group_by(treat, post_2x2) %&gt;%
+    summarise(mean_y = mean(.data[[y]], na.rm = TRUE), .groups = "drop")
+  
+  # Extract cells
+  A &lt;- tab$mean_y[tab$treat==0 &amp; tab$post_2x2==0]  # Control, Pre
+  B &lt;- tab$mean_y[tab$treat==0 &amp; tab$post_2x2==1]  # Control, Post
+  C &lt;- tab$mean_y[tab$treat==1 &amp; tab$post_2x2==0]  # Treated, Pre
+  D &lt;- tab$mean_y[tab$treat==1 &amp; tab$post_2x2==1]  # Treated, Post
+  
+  DID &lt;- (D - C) - (B - A)
+  
+  list(cell_means = tab, DID = DID, A=A, B=B, C=C, D=D)
+}
+# 3) Visualization: classic DiD plot (means over time) --------
+plot_did_means &lt;- function(data, y, ylab){
+  means &lt;- data %&gt;%
+    group_by(year, group) %&gt;%
+    summarise(m = mean(.data[[y]], na.rm = TRUE), .groups = "drop")
+  
+  ggplot(means, aes(x = year, y = m, group = group, linetype = group)) +
+    geom_line(linewidth = 1) +
+    geom_point(size = 2) +
+    labs(
+      title = paste0("DiD Mean Trends: ", y),
+      subtitle = "Two periods only: visualizes pre–post change for treated vs control",
+      x = NULL, y = ylab, linetype = NULL
+    ) +
+    theme_minimal()
+}
+
+# 4) Visualization: 2×2 cell means (bar/point) ----------------
+plot_2x2_cells &lt;- function(data, y, ylab){
+  tab &lt;- data %&gt;%
+    group_by(group, period) %&gt;%
+    summarise(m = mean(.data[[y]], na.rm = TRUE), .groups = "drop")
+  
+  ggplot(tab, aes(x = period, y = m, group = group, linetype = group)) +
+    geom_line(linewidth = 1) +
+    geom_point(size = 3) +
+    labs(
+      title = paste0("2×2 Cell Means: ", y),
+      subtitle = "This is the visual analogue of DiD (difference in changes)",
+      x = NULL, y = ylab, linetype = NULL
+    ) +
+    theme_minimal()
+}
+# 5) Visualization: distributions (boxplots) ------------------
+plot_distribution &lt;- function(data, y, ylab){
+  ggplot(data, aes(x = interaction(group, period, sep = " × "), y = .data[[y]])) +
+    geom_boxplot() +
+    labs(
+      title = paste0("Outcome Distribution by Group × Period: ", y),
+      x = NULL, y = ylab
+    ) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 20, hjust = 1))
+}
+# 6) DiD regression with cluster-robust SE --------------------
+# Canonical 2×2 DiD regression: y ~ treat + post + treat:post
+# We cluster at district level since each district appears twice (pre &amp; post).
+run_did_lm &lt;- function(data, y, controls = FALSE){
+  if(!controls){
+    fml &lt;- as.formula(paste0(y, " ~ treat + post_2x2 + treat:post_2x2"))
+  } else {
+    fml &lt;- as.formula(paste0(
+      y,
+      " ~ treat + post_2x2 + treat:post_2x2 + ",
+      "urban_share + ln_pop + rainfall_anom + tot_shock + baseline_poverty_2006"
+    ))
+  }
+  m &lt;- lm(fml, data = data)
+  # Cluster-robust variance (district-level)
+  V &lt;- sandwich::vcovCL(m, cluster = data$district_id, type = "HC1")
+  test &lt;- lmtest::coeftest(m, vcov. = V)
+  list(model = m, vcov = V, coeftest = test)
+}
+# 6) DiD regression with cluster-robust SE --------------------
+# Canonical 2×2 DiD regression: y ~ treat + post + treat:post
+# We cluster at district level since each district appears twice (pre &amp; post).
+run_did_lm &lt;- function(data, y, controls = FALSE){
+  if(!controls){
+    fml &lt;- as.formula(paste0(y, " ~ treat + post_2x2 + treat:post_2x2"))
+  } else {
+    fml &lt;- as.formula(paste0(
+      y,
+      " ~ treat + post_2x2 + treat:post_2x2 + ",
+      "urban_share + ln_pop + rainfall_anom + tot_shock + baseline_poverty_2006"
+    ))
+  }
+  m &lt;- lm(fml, data = data)
+  # Cluster-robust variance (district-level)
+  V &lt;- sandwich::vcovCL(m, cluster = data$district_id, type = "HC1")
+  test &lt;- lmtest::coeftest(m, vcov. = V)
+  list(model = m, vcov = V, coeftest = test)
+}
+# 7) Run everything for all outcomes --------------------------
+outcomes &lt;- list(
+  poverty_rate = "Poverty rate (%)",
+  log_real_cons_pc = "Log real consumption per capita",
+  sme_employment_rate = "SME employment rate (%)"
+)
+```
+]
+
+.pull-right[
+
+``` r
+# Results
+results &lt;- list()
+
+for(y in names(outcomes)){
+  cat("\n====================================================\n")
+  cat("Outcome:", y, "\n")
+  
+  # DiD by hand
+  hand &lt;- did_by_hand(df, y)
+  print(hand$cell_means)
+  cat("DiD by hand =", hand$DID, "\n")
+  
+  # Regressions
+  r0 &lt;- run_did_lm(df, y, controls = FALSE)
+  r1 &lt;- run_did_lm(df, y, controls = TRUE)
+  
+  cat("\nUnadjusted DiD (clustered SE):\n")
+  print(r0$coeftest)
+  
+  cat("\nAdjusted DiD + controls (clustered SE):\n")
+  print(r1$coeftest)
+  
+  # Store for reporting
+  results[[y]] &lt;- list(hand = hand, unadj = r0, adj = r1)
+  
+  # Plots
+  print(plot_did_means(df, y, outcomes[[y]]))
+  print(plot_2x2_cells(df, y, outcomes[[y]]))
+  print(plot_distribution(df, y, outcomes[[y]]))
+  plot_did_means(df, "poverty_rate", outcomes[["poverty_rate"]])
+}
+```
+]
+
+---
+# Simulated Example in R (2x2 DiD)
+&lt;div style= "font-size: 18px;"&gt;
+
+```
+## 
+## ====================================================
+## Outcome: poverty_rate 
+## # A tibble: 4 × 3
+##   treat post_2x2 mean_y
+##   &lt;int&gt;    &lt;int&gt;  &lt;dbl&gt;
+## 1     0        0   26.0
+## 2     0        1   23.5
+## 3     1        0   22.0
+## 4     1        1   17.6
+## DiD by hand = -1.793132 
+## 
+## Unadjusted DiD (clustered SE):
+## 
+## t test of coefficients:
+## 
+##                Estimate Std. Error t value  Pr(&gt;|t|)    
+## (Intercept)    26.04090    2.11345 12.3215 &lt; 2.2e-16 ***
+## treat          -4.06770    2.71930 -1.4959 0.1373598    
+## post_2x2       -2.54233    0.74252 -3.4239 0.0008494 ***
+## treat:post_2x2 -1.79313    0.91147 -1.9673 0.0514946 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## 
+## Adjusted DiD + controls (clustered SE):
+## 
+## t test of coefficients:
+## 
+##                         Estimate Std. Error t value  Pr(&gt;|t|)    
+## (Intercept)             1.717094  12.665548  0.1356 0.8924008    
+## treat                  -1.560686   1.073550 -1.4538 0.1487841    
+## post_2x2               -2.054013   0.575708 -3.5678 0.0005294 ***
+## urban_share           -10.060158   2.353078 -4.2753 4.006e-05 ***
+## ln_pop                 -0.233687   1.068044 -0.2188 0.8272010    
+## rainfall_anom           0.458693   0.338704  1.3543 0.1783553    
+## tot_shock              -1.023769   0.229540 -4.4601 1.944e-05 ***
+## baseline_poverty_2006   0.981068   0.035212 27.8617 &lt; 2.2e-16 ***
+## treat:post_2x2         -2.020455   0.788982 -2.5608 0.0117603 *  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## 
+## ====================================================
+## Outcome: log_real_cons_pc 
+## # A tibble: 4 × 3
+##   treat post_2x2 mean_y
+##   &lt;int&gt;    &lt;int&gt;  &lt;dbl&gt;
+## 1     0        0   8.33
+## 2     0        1   8.40
+## 3     1        0   8.34
+## 4     1        1   8.46
+## DiD by hand = 0.0428489 
+## 
+## Unadjusted DiD (clustered SE):
+## 
+## t test of coefficients:
+## 
+##                Estimate Std. Error  t value  Pr(&gt;|t|)    
+## (Intercept)    8.330814   0.026067 319.5910 &lt; 2.2e-16 ***
+## treat          0.012133   0.029954   0.4051 0.6861659    
+## post_2x2       0.069768   0.019728   3.5366 0.0005803 ***
+## treat:post_2x2 0.042849   0.024907   1.7204 0.0879834 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## 
+## Adjusted DiD + controls (clustered SE):
+## 
+## t test of coefficients:
+## 
+##                          Estimate  Std. Error t value  Pr(&gt;|t|)    
+## (Intercept)            8.56606891  0.34156263 25.0791 &lt; 2.2e-16 ***
+## treat                  0.00639043  0.02991956  0.2136 0.8312540    
+## post_2x2               0.05967585  0.01705438  3.4991 0.0006687 ***
+## urban_share            0.11006452  0.07315942  1.5044 0.1352561    
+## ln_pop                -0.02511746  0.03039971 -0.8262 0.4104091    
+## rainfall_anom         -0.01188198  0.00965831 -1.2302 0.2211644    
+## tot_shock              0.02428986  0.00706128  3.4399 0.0008162 ***
+## baseline_poverty_2006  0.00090011  0.00115421  0.7799 0.4371093    
+## treat:post_2x2         0.04822672  0.02198667  2.1935 0.0303228 *  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## 
+## ====================================================
+## Outcome: sme_employment_rate 
+## # A tibble: 4 × 3
+##   treat post_2x2 mean_y
+##   &lt;int&gt;    &lt;int&gt;  &lt;dbl&gt;
+## 1     0        0   14.9
+## 2     0        1   14.8
+## 3     1        0   14.4
+## 4     1        1   17.0
+## DiD by hand = 2.604316 
+## 
+## Unadjusted DiD (clustered SE):
+## 
+## t test of coefficients:
+## 
+##                 Estimate Std. Error t value  Pr(&gt;|t|)    
+## (Intercept)    14.852784   0.457852 32.4401 &lt; 2.2e-16 ***
+## treat          -0.462996   0.681289 -0.6796    0.4981    
+## post_2x2       -0.034611   0.450444 -0.0768    0.9389    
+## treat:post_2x2  2.604316   0.639651  4.0715 8.488e-05 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## 
+## Adjusted DiD + controls (clustered SE):
+## 
+## t test of coefficients:
+## 
+##                          Estimate  Std. Error t value  Pr(&gt;|t|)    
+## (Intercept)           24.04921360  6.48418180  3.7089 0.0003244 ***
+## treat                 -0.87776801  0.61972936 -1.4164 0.1594171    
+## post_2x2              -0.23263708  0.40479391 -0.5747 0.5666333    
+## urban_share            7.41422237  1.54859339  4.7877 5.152e-06 ***
+## ln_pop                -0.99503278  0.54710616 -1.8187 0.0716026 .  
+## rainfall_anom         -0.23241821  0.22078449 -1.0527 0.2947277    
+## tot_shock              0.53428718  0.13103882  4.0773 8.507e-05 ***
+## baseline_poverty_2006  0.00043633  0.03018131  0.0145 0.9884910    
+## treat:post_2x2         2.71887486  0.58592658  4.6403 9.431e-06 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+# Simulated Example in R (2x2 DiD)
+&lt;div style= "font-size: 18px;"&gt;
+.pull-left[
+&lt;table class="table table-striped table-condensed table-responsive" style="font-size: 12px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; treat &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; post_2x2 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; mean_y &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Interpretation &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 55px; "&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 55px; "&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;width: 55px; "&gt; 26.0 &lt;/td&gt;
+   &lt;td style="text-align:left;width: 220px; font-weight: bold;"&gt; Control, Pre (no LEAP scale-up yet) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 55px; "&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 55px; "&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;width: 55px; "&gt; 23.5 &lt;/td&gt;
+   &lt;td style="text-align:left;width: 220px; font-weight: bold;"&gt; Control, Post &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 55px; "&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 55px; "&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;width: 55px; "&gt; 22.0 &lt;/td&gt;
+   &lt;td style="text-align:left;width: 220px; font-weight: bold;"&gt; Treated, Pre &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 55px; "&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 55px; "&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;width: 55px; "&gt; 17.6 &lt;/td&gt;
+   &lt;td style="text-align:left;width: 220px; font-weight: bold;"&gt; Treated, Post (after LEAP scale-up) &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+- We need to compute the DiD estimate:
+  
+  `$$\hat{DID} = (\bar{Y}_{Treated,Post}- \bar{Y}_{Treated,Pre}) - (\bar{Y}_{Control,Post} - \bar{Y}_{Control,Post}) \\ = (17.6 - 22.0) - (23.5 - 26.0) = -4.4 - (-2.5) = -1.9$$`
+- Between 2011 (pre) and 2013 (post), districts that received the LEAP scale-up experienced an additional reduction in poverty of about 1.9 percentage points relative to never-treated districts—over and above what would be expected from general macro trends.
+
+]
+
+.pull-right[
+&lt;div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:260px; overflow-x: scroll; width:100%; "&gt;&lt;table class="table" style="font-size: 12px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; Term &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Estimate &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Std. Error &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; t value &lt;/th&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; Pr(&amp;gt;|t|) &lt;/th&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; Sig &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26.04090 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.11345 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12.3215 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; &amp;lt; 2.2e-16 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; *** &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; treat &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -4.06770 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.71930 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1.4959 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.1373598 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; post_2x2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -2.54233 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.74252 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -3.4239 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0008494 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; *** &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; treat:post_2x2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1.79313 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.91147 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1.9673 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0514946 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; . &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/div&gt;
+
+- The LEAP scale-up is associated with about a 1.79-unit lower poverty rate in treated districts relative to the control districts’ change over the same period.
+
+- `post_2x2 = -2.542 (p&lt;0.001)`: poverty fell in the control group by ~2.54 points from pre to post.
+
+- Treated districts experienced an even larger fall: control fell ~2.54; treated fell ~2.54 + 1.79 ≈ 4.33 points (because the interaction is -1.79)
+
+]
+
+---
+# Simulated Example in R (2x2 DiD)
+&lt;div style= "font-size: 18px;"&gt;
+.pull-left[
+&lt;div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:240px; overflow-x: scroll; width:100%; "&gt;&lt;table class="table" style="font-size: 11px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; Term &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Estimate &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Std. Error &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; t value &lt;/th&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; Pr(&amp;gt;|t|) &lt;/th&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; Sig &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.717094 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12.665548 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1356 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.8924008 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; treat &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1.560686 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.073550 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1.4538 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.1487841 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; post_2x2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -2.054013 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.575708 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -3.5678 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0005294 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; *** &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; urban_share &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -10.060158 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.353078 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -4.2753 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 4.006e-05 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; *** &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; ln_pop &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.233687 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.068044 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.2188 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.8272010 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; rainfall_anom &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.458693 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.338704 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.3543 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.1783553 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; tot_shock &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1.023769 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.229540 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -4.4601 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1.944e-05 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; *** &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; baseline_poverty_2006 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.981068 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.035212 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 27.8617 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; &amp;lt; 2.2e-16 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; *** &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; treat:post_2x2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -2.020455 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.788982 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -2.5608 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0117603 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; * &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/div&gt;
+
+- After adjusting for covariates, the LEAP scale-up is associated with about a 2.02-unit lower poverty rate in treated districts relative to the control districts’ change over the same period (p = 0.012).
+- `post_2x2 = -2.054 (p&lt;0.001)`: poverty fell in the control group by ~2.05 points from pre to post.
+- Treated districts experienced an even larger fall: control fell ~2.05; treated fell ~2.05 + 2.02 ≈ 4.07 points (because the interaction is -2.02
+
+
+]
+
+.pull-right[
+![](L2_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+]
+
+
+
+---
+# Simulated Example in R (Event Study)
+&lt;div style= "font-size: 18px;"&gt;
+.pull-left[
+
+``` r
+#Importing Libraries needed
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(broom)
+library(lmtest)
+library(sandwich)
+library(car)
+library(modelsummary)
+library(scales)
+df &lt;- read_xlsx("event_leap.xlsx")
+
+# Basic cleaning / types
+df &lt;- df %&gt;%
+  mutate(
+    district_id = as.factor(district_id),
+    year        = as.integer(year),
+    treat       = as.integer(treat),
+    event_time  = as.integer(event_time),
+    ln_pop      = log(population),
+    group       = ifelse(treat == 1, "Treated (LEAP scaled)", "Control (never-treated)")
+  )
+# Quick validation
+#cat("\nTwo groups check (treat):\n"); print(table(df$treat))
+#cat("\nEvent-time range:\n"); print(range(df$event_time, na.rm = TRUE))
+```
+
+
+```
+## [1] -5  5
+```
+
+```
+## 
+##   0   1 
+## 286 385
+```
+]
+
+.pull-right[
+  
+
+``` r
+# 2) If lead/lag columns are missing, create them (fallback) ---
+# Your file already contains these, but this keeps the code robust.
+make_leads_lags &lt;- function(data, K_pre = 5, K_post = 5, ref = -1){
+  for(k in (-K_pre):K_post){
+    if(k == ref) next
+    nm &lt;- if(k &lt; 0) paste0("lead_", abs(k)) else paste0("lag_", k)
+    if(!nm %in% names(data)){
+      data[[nm]] &lt;- as.integer(data$treat == 1 &amp; data$event_time == k)
+    }
+  }
+  data
+}
+df &lt;- make_leads_lags(df, K_pre = 5, K_post = 5, ref = -1)
+
+lead_terms &lt;- paste0("lead_", 2:5)
+lag_terms  &lt;- paste0("lag_", 0:5)
+
+# Keep only those that exist in your data (safety)
+lead_terms &lt;- lead_terms[lead_terms %in% names(df)]
+lag_terms  &lt;- lag_terms[lag_terms %in% names(df)]
+
+# 3) Core estimation function (TWFE + clustered SE) -----------
+# Notes:
+# - district FE + year FE via factor(district_id) + factor(year)
+# - cluster by district (each district observed multiple times)
+# - controls are optional; time-invariant controls are absorbed by district FE.
+event_study_lm &lt;- function(data, y, add_controls = TRUE){
+  
+  rhs_es &lt;- c(lead_terms, lag_terms)
+  
+  # time-varying controls (safe with FE)
+  ctrl &lt;- c("rainfall_anom", "tot_shock", "ln_pop")
+  ctrl &lt;- ctrl[ctrl %in% names(data)]
+  
+  rhs &lt;- c(rhs_es,
+           if(add_controls) ctrl else NULL,
+           "factor(district_id)", "factor(year)")
+  
+  fml &lt;- as.formula(paste(y, "~", paste(rhs, collapse = " + ")))
+  
+  m &lt;- lm(fml, data = data)
+  
+  V &lt;- sandwich::vcovCL(m, cluster = data$district_id, type = "HC1")
+  
+  list(model = m, vcov = V)
+}
+
+# 4) Extract event-study coefficients into a tidy data frame ---
+tidy_es &lt;- function(est_obj){
+  m &lt;- est_obj$model
+  V &lt;- est_obj$vcov
+  
+  coefs &lt;- lmtest::coeftest(m, vcov. = V)
+  
+  # Convert to tibble
+  tt &lt;- tibble::tibble(
+    term = rownames(coefs),
+    estimate = coefs[,1],
+    std_error = coefs[,2],
+    p_value = coefs[,4]
+  ) %&gt;%
+    mutate(
+      conf_low  = estimate - 1.96*std_error,
+      conf_high = estimate + 1.96*std_error
+    )
+  
+  # Keep only leads/lags terms
+  tt_es &lt;- tt %&gt;%
+    filter(grepl("^lead_|^lag_", term)) %&gt;%
+    mutate(
+      event_time = dplyr::case_when(
+        grepl("^lead_", term) ~ -as.integer(sub("lead_", "", term)),
+        grepl("^lag_",  term) ~  as.integer(sub("lag_",  "", term)),
+        TRUE ~ NA_integer_
+      )
+    )
+  
+  # Add reference period (-1) with effect 0 (not estimated)
+  ref_row &lt;- tibble::tibble(
+    term = "ref(-1)", estimate = 0, std_error = NA_real_, p_value = NA_real_,
+    conf_low = 0, conf_high = 0, event_time = -1
+  )
+  
+  bind_rows(tt_es, ref_row) %&gt;%
+    arrange(event_time)
+}
+
+# 5) Visualizations ------------------------------------------
+# (A) Event-time mean trends (treated vs control)
+plot_event_means &lt;- function(data, y, ylab){
+  means &lt;- data %&gt;%
+    group_by(event_time, group) %&gt;%
+    summarise(m = mean(.data[[y]], na.rm = TRUE), .groups = "drop")
+  
+  ggplot(means, aes(x = event_time, y = m, linetype = group)) +
+    geom_line(linewidth = 1) +
+    geom_point(size = 2) +
+    geom_vline(xintercept = 0, linetype = "dashed") +
+    labs(
+      title = paste0("Event-Time Mean Trends: ", y),
+      subtitle = "Dashed line at event_time = 0 (treatment starts).",
+      x = "Event time (years relative to treatment start)",
+      y = ylab,
+      linetype = NULL
+    ) +
+    theme_minimal()
+}
+
+# (B) Event-study coefficient plot with CI
+plot_event_coefs &lt;- function(tt, y, ylab){
+  ggplot(tt, aes(x = event_time, y = estimate)) +
+    geom_hline(yintercept = 0, linetype = "solid") +
+    geom_vline(xintercept = 0, linetype = "dashed") +
+    geom_errorbar(aes(ymin = conf_low, ymax = conf_high), width = 0.15) +
+    geom_point(size = 2.5) +
+    scale_x_continuous(breaks = sort(unique(tt$event_time))) +
+    labs(
+      title = paste0("Event-Study DiD Estimates: ", y),
+      subtitle = "Reference period is event_time = -1 (coefficient normalized to 0).",
+      x = "Event time",
+      y = paste0("Effect on ", ylab)
+    ) +
+    theme_minimal()
+}
+
+# (C) Leads-only plot (visual pre-trends diagnostic)
+plot_pretrends &lt;- function(tt, y){
+  pre &lt;- tt %&gt;% filter(event_time &lt; 0)
+  ggplot(pre, aes(x = event_time, y = estimate)) +
+    geom_hline(yintercept = 0) +
+    geom_errorbar(aes(ymin = conf_low, ymax = conf_high), width = 0.15) +
+    geom_point(size = 2.5) +
+    scale_x_continuous(breaks = sort(unique(pre$event_time))) +
+    labs(
+      title = paste0("Pre-trends (Leads) Diagnostic: ", y),
+      subtitle = "Leads close to 0 (with CI covering 0) supports parallel trends.",
+      x = "Event time (pre-treatment)",
+      y = "Estimated lead effect"
+    ) +
+    theme_minimal()
+}
+
+# (D) Joint Wald test of pre-trends: H0: all lead_k = 0
+pretrend_wald &lt;- function(est_obj){
+  m &lt;- est_obj$model
+  V &lt;- est_obj$vcov
+  leads &lt;- lead_terms[lead_terms %in% names(coef(m))]
+  if(length(leads) == 0) return(NA)
+  
+  hyp &lt;- paste0(leads, " = 0")
+  car::linearHypothesis(m, hyp, vcov. = V)
+}
+# 6) Run for the policy objectives (3 outcomes) ---------------
+outcomes &lt;- list(
+  poverty_rate = "Poverty rate (%)",
+  log_real_cons_pc = "Log real consumption per capita",
+  sme_employment_rate = "SME employment rate (%)"
+)
+```
+- event_time spans 5 periods before treatment (-5) through 5 periods after treatment (+5). In an event-study design, these are the leads and lags used to trace out dynamics around the treatment date.
+
+- 286 are control observations (treat = 0) and 385 are treated observations (treat = 1).
+]
+
+---
+# Simulated Example in R (Event Study)
+.pull-left[
+**Outcome:** `poverty_rate`  
+**Null (joint):**  
+`lead_2 = 0`, &lt;br&gt;
+`lead_3 = 0`, &lt;br&gt;
+`lead_4 = 0`, &lt;br&gt;
+`lead_5 = 0` &lt;br&gt;
+**Test:** Wald / linear hypothesis (cluster-robust VCOV supplied)
+&lt;table class="table" style="font-size: 12px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Model &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Res.Df &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Df &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; F statistic &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Pr(&amp;gt;F) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Restricted &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 591 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Unrestricted &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 587 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.9041 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.4611 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+- There is no significance difference in the trends between the treatment and control groups before the intervention occurred.
+
+]
+
+.pull-right[
+
+.center[&lt;img src="pretrends_poverty_rate.png" width="100%"/&gt;]
+
+- Prior to LEAP scale-up, treated and control districts appear to have had similar poverty trends
+]
+
+---
+# Simulated Example in R (Event Study)
+&lt;div style= "font-size: 18px;"&gt;
+.pull-left[
+
+.center[&lt;img src="event_study_poverty_rate.png" width="70%"/&gt;]
+- Using an event-study DiD with the year prior to treatment (event time −1) as the reference, pre-treatment coefficients are statistically indistinguishable from zero, providing no evidence of differential pre-trends in poverty.
+- After LEAP scale-up, estimated effects become negative and remain persistently below zero, indicating that treated districts experience roughly a 1.5–2.2 percentage-point reduction in poverty relative to control districts, compared to the pre-treatment baseline.
+
+]
+
+.pull-right[
+
+
+.center[&lt;img src="event_means_poverty_rate.png" width="100%"/&gt;]
+- While both groups were slowly improving (reducing poverty) before the intervention, the Treated group (dashed line) experienced a sharp and accelerated drop in poverty immediately after the intervention (Time 0), while the Control group (solid line) continued on its slower, natural trajectory.
+
+
+]
+
+---
+# Simulated Example in R (Modern DiD)
+&lt;div style= "font-size: 18px;"&gt;
+.pull-left[
+
+``` r
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(fixest)
+library(did)
+library(stringr)
+library(scales)
+
+# -------------------------
+# 1) Load data
+# -------------------------
+df &lt;- readxl::read_excel("leap.xlsx")
+
+# Required columns (adjust here if your names differ)
+required &lt;- c("district_id","year","treat_year",
+              "poverty_rate","log_real_cons_pc","sme_employment_rate",
+              "rainfall_anom","tot_shock","urban_share","population")
+missing_cols &lt;- setdiff(required, names(df))
+if(length(missing_cols) &gt; 0){
+  stop("Missing required columns in leap.xlsx: ", paste(missing_cols, collapse = ", "))
+}
+
+# Types + numeric district id (CRITICAL FIX FOR did::att_gt)
+df &lt;- df %&gt;%
+  mutate(
+    district_id = as.character(district_id),
+    id          = as.integer(as.factor(district_id)),  # did requires numeric id :contentReference[oaicite:2]{index=2}
+    year        = as.integer(year),
+    treat_year  = as.integer(treat_year),
+    ln_pop      = log(population)
+  )
+
+# Check uniqueness: one row per district-year (required for panel DiD)
+dup_check &lt;- df %&gt;% count(id, year) %&gt;% filter(n &gt; 1)
+if(nrow(dup_check) &gt; 0){
+  stop("Your data has duplicate rows for some (district,year). Fix duplicates before running did::att_gt.")
+}
+
+# -------------------------
+# 2) Staggered adoption coding
+# -------------------------
+# Treat-year conventions:
+# - Your simulated data often uses 9999 (or similar) for never-treated.
+# If treat_year is NA/0 for never-treated, normalize it.
+df &lt;- df %&gt;%
+  mutate(
+    treat_year = dplyr::case_when(
+      is.na(treat_year) ~ 9999L,
+      treat_year &lt;= 0   ~ 9999L,
+      TRUE              ~ treat_year
+    ),
+    
+    # For Sun &amp; Abraham: never-treated cohort coded as large year
+    cohort_sa = ifelse(treat_year &gt;= 9999, 10000L, treat_year),
+    
+    # For Callaway &amp; Sant’Anna (did): never-treated must be g=0
+    g = ifelse(treat_year &gt;= 9999, 0L, treat_year),
+    
+    # Build treatment indicators consistently (even if not in file)
+    treat = as.integer(treat_year &lt; 9999),
+    post  = as.integer(treat == 1 &amp; year &gt;= treat_year),
+    did   = treat * post,
+    
+    group_simple = ifelse(treat == 1, "Ever treated", "Never treated")
+  )
+
+# -------------------------
+# 3) Core teaching visuals
+# -------------------------
+
+# (A) Adoption profile
+adopt_profile &lt;- df %&gt;%
+  distinct(id, treat_year, treat) %&gt;%
+  mutate(first_treat = ifelse(treat == 1, treat_year, NA_integer_)) %&gt;%
+  count(first_treat)
+
+ggplot(adopt_profile, aes(x = first_treat, y = n)) +
+  geom_col() +
+  labs(
+    title = "LEAP rollout profile: districts by first treatment year",
+    x = "First treatment year (NA = never-treated)",
+    y = "Number of districts"
+  ) +
+  theme_minimal()
+# (B) Raw mean trends: ever-treated vs never-treated (descriptive)
+plot_mean_trends &lt;- function(data, y, ylab){
+  tmp &lt;- data %&gt;%
+    group_by(year, group_simple) %&gt;%
+    summarise(m = mean(.data[[y]], na.rm = TRUE), .groups = "drop")
+  
+  ggplot(tmp, aes(x = year, y = m, linetype = group_simple)) +
+    geom_line(linewidth = 1) +
+    geom_point(size = 2) +
+    labs(
+      title = paste0("Raw mean trends: ", y),
+      subtitle = "Descriptive (ever-treated vs never-treated)",
+      x = NULL, y = ylab, linetype = NULL
+    ) +
+    theme_minimal()
+}
+print(plot_mean_trends(df, "poverty_rate", "Poverty rate (%)"))
+print(plot_mean_trends(df, "log_real_cons_pc", "Log real consumption per capita"))
+print(plot_mean_trends(df, "sme_employment_rate", "SME employment rate (%)"))
+```
+]
+
+.pull-right[
+![](L2_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+- Figure shows staggered implementation of LEAP across districts over time
+
+- This implies multiple treatment cohorts and varying treatment timing, meaning traditional 2×2 DiD methods are not applicable.
+
+]
+
+
+---
+# Simulated Example in R (Modern DiD)
+&lt;div style= "font-size: 18px;"&gt;
+.pull-left[
+![](L2_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+- Districts that eventually receive LEAP scale-up look like they were on a stronger poverty-reduction path over the sample period..
+- This can however no be interpreted causally, since treatment timing is not random and treated districts may differ systematically from never-treated districts.
+
+]
+.pull-right[
+
+``` r
+# -------------------------
+# 4) (i) Baseline TWFE DiD (district FE + year FE; clustered SE)
+# -------------------------
+twfe &lt;- function(y){
+  fixest::feols(
+    as.formula(paste0(
+      y, " ~ did + rainfall_anom + tot_shock + urban_share + ln_pop | id + year"
+    )),
+    data = df,
+    vcov = ~id
+  )
+}
+
+m_pov_twfe &lt;- twfe("poverty_rate")
+m_con_twfe &lt;- twfe("log_real_cons_pc")
+m_emp_twfe &lt;- twfe("sme_employment_rate")
+
+fixest::etable(
+  m_pov_twfe, m_con_twfe, m_emp_twfe,
+  dict = c(did = "LEAP DiD (Treated×Post)"),
+  headers = c("Poverty", "Consumption", "SME Employment")
+)
+```
+]
+
+
+---
+# Simulated Example in R (Modern DiD)
+&lt;div style= "font-size: 18px;"&gt;
+.pull-left[
+**Models:** `m_pov_twfe`, `m_con_twfe`, `m_emp_twfe`  
+**SEs:** Clustered by `id`  
+**Fixed effects:** District (`id`) and Year (`year`)  
+&lt;div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:360px; overflow-x: scroll; width:100%; "&gt;&lt;table class="table" style="font-size: 11px; margin-left: auto; margin-right: auto;border-bottom: 0;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; Term &lt;/th&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; Poverty (poverty_rate) &lt;/th&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; Consumption (log_real_cons_pc) &lt;/th&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; SME Employment (sme_employment_rate) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; LEAP DiD (Treated×Post) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -3.083*** (0.1649) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0631*** (0.0039) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1.634*** (0.1114) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; rainfall_anom &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.2511*** (0.0407) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0022* (0.0011) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -0.1454*** (0.0291) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; tot_shock &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -0.5908*** (0.0386) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0357*** (0.0011) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.5340*** (0.0255) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; ln_pop &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -1.406 (1.721) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -0.0688. (0.0357) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -0.3634 (1.055) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Fixed effects: id &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Yes &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Fixed effects: year &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Yes &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; S.E.: Clustered (by) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; id &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; id &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; id &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Observations &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2,808 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2,808 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2,808 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; R2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.96143 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.87258 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.76957 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Within R2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.20962 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.35850 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.19432 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;tfoot&gt;&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;
+&lt;sup&gt;&lt;/sup&gt; Signif. codes: *** p&amp;lt;0.001; ** p&amp;lt;0.01; * p&amp;lt;0.05; . p&amp;lt;0.1&lt;/td&gt;&lt;/tr&gt;&lt;/tfoot&gt;
+&lt;/table&gt;&lt;/div&gt;
+]
+
+.pull-right[
+- LEAP scale-up is associated with a 3.08 percentage-point reduction in district poverty relative to the counterfactual trend in control districts.
+
+- LEAP scale-up is associated with about a 6.5% (`\(100\times(exp(\beta)-1\)`) increase in real consumption per capita (relative to controls). 
+
+- LEAP scale-up is associated with a 1.63 percentage-point increase in SME employment rate relative to control districts.
+
+- The LEAP program serves as a proven catalyst for poverty reduction, causally lowering poverty rates by over 3 percentage points while stimulating local consumption and SME employment.
+]
+
+
+---
+# Simulated Example in R (Modern DiD)
+&lt;div style= "font-size: 18px;"&gt;
+.pull-left[
+
+#### Staggered treatment
+
+``` r
+# -------------------------
+# 5) (ii) Sun &amp; Abraham cohort-relative event study (robust to heterogeneity)
+# -------------------------
+# IMPORTANT CHANGE: no refp &lt;- c(-1, .F). .F is only meaningful inside sunab().
+# sunab() defaults to using -1 and the first relative period as references. :contentReference[oaicite:3]{index=3}
+
+sa_event_study &lt;- function(y){
+  fixest::feols(
+    as.formula(paste0(
+      y,
+      " ~ sunab(cohort_sa, year) + rainfall_anom + tot_shock + urban_share + ln_pop | id + year"
+    )),
+    data = df,
+    vcov = ~id
+  )
+}
+
+es_pov &lt;- sa_event_study("poverty_rate")
+es_con &lt;- sa_event_study("log_real_cons_pc")
+es_emp &lt;- sa_event_study("sme_employment_rate")
+
+# Event-study plots
+fixest::iplot(es_pov, ref.line = 0, main = "Sun &amp; Abraham Event Study: Poverty", xlab = "Event time")
+fixest::iplot(es_con, ref.line = 0, main = "Sun &amp; Abraham Event Study: Consumption", xlab = "Event time")
+fixest::iplot(es_emp, ref.line = 0, main = "Sun &amp; Abraham Event Study: SME Employment", xlab = "Event time")
+# Overall ATT aggregation
+summary(es_pov, agg = "ATT")
+summary(es_con, agg = "ATT")
+summary(es_emp, agg = "ATT")
+```
+
+- Pre-treatment (event time &lt; 0): the lead estimates are clustered around 0 and their 95% CIs mostly cover 0, indicating no clear evidence of differential pre-trends in poverty prior to LEAP scale-up (supportive of the DiD identifying assumption).
+]
+
+.pull-right[
+.center[&lt;img src="mod1.png" width="70%"/&gt;]
+
+- Post-treatment (event time ≥ 0): estimates turn negative immediately and remain roughly around −2 to −4 percentage points over subsequent years, with many intervals fully below 0—consistent with a statistically meaningful, persistent reduction in district poverty following LEAP scale-up.
+
+- The LEAP program serves as a robust catalyst for development, causally reducing poverty rates by over 3 percentage points while simultaneously stimulating household consumption and local SME employment.
+
+]
+
+---
+# Simulated Example in R (Modern DiD)
+&lt;div style= "font-size: 18px;"&gt;
+.pull-left[
+**Models:** `m_pov_twfe`, `m_con_twfe`, `m_emp_twfe`  
+**SEs:** Clustered by `id`  
+**Fixed effects:** District (`id`) and Year (`year`)  
+&lt;div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:360px; overflow-x: scroll; width:100%; "&gt;&lt;table class="table" style="font-size: 11px; margin-left: auto; margin-right: auto;border-bottom: 0;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; Term &lt;/th&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; Poverty (poverty_rate) &lt;/th&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; Consumption (log_real_cons_pc) &lt;/th&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; SME Employment (sme_employment_rate) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; LEAP DiD (Treated×Post) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -3.083*** (0.1649) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0631*** (0.0039) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1.634*** (0.1114) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; rainfall_anom &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.2511*** (0.0407) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0022* (0.0011) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -0.1454*** (0.0291) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; tot_shock &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -0.5908*** (0.0386) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.0357*** (0.0011) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.5340*** (0.0255) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; ln_pop &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -1.406 (1.721) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -0.0688. (0.0357) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; -0.3634 (1.055) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Fixed effects: id &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Yes &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Fixed effects: year &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Yes &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; S.E.: Clustered (by) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; id &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; id &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; id &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Observations &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2,808 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2,808 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2,808 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; R2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.96143 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.87258 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.76957 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Within R2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.20962 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.35850 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 0.19432 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;tfoot&gt;&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;
+&lt;sup&gt;&lt;/sup&gt; Signif. codes: *** p&amp;lt;0.001; ** p&amp;lt;0.01; * p&amp;lt;0.05; . p&amp;lt;0.1&lt;/td&gt;&lt;/tr&gt;&lt;/tfoot&gt;
+&lt;/table&gt;&lt;/div&gt;
+
+]
+
+.pull-right[
+- LEAP scale-up reduces district poverty by about 2.89 percentage points on average, relative to the counterfactual path (constructed from the comparison group within the staggered-adoption/event-study framework), after accounting for district and year fixed effects and clustering by district
+- The pre-treatment leads are approximately zero, supporting the parallel-trends requirement behind interpreting this drop as a credible program effect.
+#### Callaway &amp; Sant’Anna group-time ATTs (did package)
+**Outcome:** `poverty_rate`  
+**Call:** `did::aggte(MP = att_pov, type = "group")`  
+**Control group:** Not yet treated  
+**Anticipation periods:** 0  
+**Estimation method:** Doubly robust  
+**Signif. code:** `*` = simultaneous confidence band excludes 0
+]
+
+
+---
+# Simulated Example in R (Modern DiD)
+
+``` r
+# -------------------------
+# 6) (iii) Callaway &amp; Sant’Anna group-time ATTs (did package)
+# -------------------------
+# Key FIX: idname must be numeric -&gt; we use id (not district_id). :contentReference[oaicite:4]{index=4}
+
+run_attgt &lt;- function(yname){
+  did::att_gt(
+    yname   = yname,
+    tname   = "year",
+    idname  = "id",   # numeric id
+    gname   = "g",    # first treated period; 0 for never-treated
+    xformla = ~ rainfall_anom + tot_shock + urban_share + ln_pop,
+    data    = df,
+    panel   = TRUE,
+    allow_unbalanced_panel = TRUE,
+    control_group = "notyettreated",
+    bstrap  = TRUE,
+    clustervars = "id",
+    print_details = FALSE
+  )
+}
+
+att_pov &lt;- run_attgt("poverty_rate")
+att_con &lt;- run_attgt("log_real_cons_pc")
+att_emp &lt;- run_attgt("sme_employment_rate")
+
+# Overall ATT (group aggregation)
+agg_pov &lt;- did::aggte(att_pov, type = "group")
+agg_con &lt;- did::aggte(att_con, type = "group")
+agg_emp &lt;- did::aggte(att_emp, type = "group")
+
+cat("\nC&amp;S overall ATT (poverty):\n"); print(summary(agg_pov))
+cat("\nC&amp;S overall ATT (consumption):\n"); print(summary(agg_con))
+cat("\nC&amp;S overall ATT (employment):\n"); print(summary(agg_emp))
+# Dynamic effects (event-study style) + plots
+dyn_pov &lt;- did::aggte(att_pov, type = "dynamic")
+dyn_con &lt;- did::aggte(att_con, type = "dynamic")
+dyn_emp &lt;- did::aggte(att_emp, type = "dynamic")
+
+did::ggdid(dyn_pov) + ggplot2::ggtitle("Callaway–Sant’Anna Dynamic ATT: Poverty")
+did::ggdid(dyn_con) + ggplot2::ggtitle("Callaway–Sant’Anna Dynamic ATT: Consumption")
+did::ggdid(dyn_emp) + ggplot2::ggtitle("Callaway–Sant’Anna Dynamic ATT: SME Employment")
+
+cat("\nDone.\n")
+```
+
+---
+# Simulated Example in R (Modern DiD)
+&lt;div style= "font-size: 18px;"&gt;
+.pull-left[
+&lt;table class="table" style="font-size: 12px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; ATT &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Std. Error &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; CI 95% (L) &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; CI 95% (U) &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Sig &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; -2.8801 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.314 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -3.4955 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -2.2646 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; * &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; overflow-x: scroll; width:100%; "&gt;&lt;table class="table" style="font-size: 11px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Group &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Estimate &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Std. Error &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Simult. Band (L) &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Simult. Band (U) &lt;/th&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; Sig &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2008 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -3.4757 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5470 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -4.8270 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -2.1244 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; * &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2009 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -3.5370 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6436 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -5.1271 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1.9470 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; * &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2010 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -2.7932 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5815 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -4.2298 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1.3566 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; * &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2012 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -2.9256 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6041 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -4.4181 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1.4330 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; * &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2013 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -2.1552 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.7945 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -4.1178 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.1925 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; * &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2015 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -2.1300 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.8788 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -4.3009 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0410 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/div&gt;
+
+]
+
+.pull-right[
+- using the C&amp;S multi-period DiD framework (appropriate for staggered rollout), LEAP scale-up is associated with about a 2.9 percentage-point reduction in district poverty on average among treated districts.
+
+- poverty reductions are consistently negative across cohorts, and they appear larger for earlier-treated cohorts; the latest cohort (2015) is less precisely estimated (not statistically different from 0 using the simultaneous band).
+
+- Using C&amp;S (staggered-adoption-robust) DiD with not-yet-treated controls, LEAP scale-up is associated with an average poverty reduction of ~2.9 percentage points (highly credible and statistically strong).
+]
+
+---
+# Simulated Example in R (Modern DiD)
+
+.center[&lt;img src="mod2.png" width="80%"/&gt;]
+
+---
+class: inverse center middle
+
+# &lt;p style="font-size:60px; font-weight:bold"&gt;Synthetic Controls and Matrix Completion 
+
+---
+# When Parallel Worlds' Dont Exist
+&lt;div style= "font-size: 30px;"&gt;
+--
+
+- Standard DiD is a powerful tool, but it rests on the strong assumption that treated and control groups would have followed parallel paths in the absence of treatment.
+
+--
+
+- In many cases, however, parallel pretreatment trends are not supported by data, a clear sign that the ‘parallel trends’ assumption is likely to fail in the posttreatment period as well (Xu, 2017).
+
+&lt;img src="img/sdid1.png" width="60%"/&gt; 
+
+---
+# When Parallel Worlds' Dont Exist
+&lt;div style= "font-size: 30px;"&gt;
+-- 
+.pull-left[
+- The Synthetic Control Method (SCM) offers a data-driven solution. Instead of assuming parallel trends with a simple average of controls, it constructs a bespoke counterfactual.
+
+
+
+- The SCM moves beyond simple control group averages by constructing a .my-coral['synthetic'] control unit from a weighted average of untreated donor units.
+
+
+- This works by selecting weights that makes the synthetic control's pre-treatment outcomes  (and other covariates) match the treated unit's history as closely as possible. 
+
+
+- This creates a more credible, custom-built counterfactual. 
+
+]
+
+.pull-right[
+
+- The method's transparency is a key advantage, as the weights explicitly show which units are used to construct the comparison. 
+
+&lt;img src="img/sdid2.png" width="100%"/&gt; 
+]
+
+---
+# Why the Parallel Trends Assumptions Often Fails
+&lt;div style= "font-size: 30px;"&gt;
+--
+
+- Why does it fail? Unobserved, time-varying confounders. 
+  - .my-coral[Example for LEAP]: A localised drought hits agricultural districts that were also prioritised for LEAP, depressing their income trends relative to urban control districts. 
+  
+  - Global cocoa price shocks affects western regions (often early LEAP adopters) differently than northern regions.
+  
+- These factors are captured by what the literature calls "interactive fixed effects": the interaction between unit-specific sensitivities (***factor loadings***) and common time shocks (***latent factors***)
+
+- Thus, a simple DiD will give a biased, misleading estimate of LEAP's impact, requiring a better way to construct a counterfactual. 
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "solarized-light",
+  "highlightLanguage": ["r", "css", "yaml"],
+  "highlightLines": true,
+  "countIncrementalSlides": false,
+  "ratio": "16:9",
+  "slideNumberFormat": "<div class=\"slide-number\" style=\"position: absolute; bottom: 1em; right: 2em; font-size: 0.9em; color: #999;\">\n  %current% / %total%\n</div>"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
