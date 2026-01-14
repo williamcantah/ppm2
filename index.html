@@ -4,7 +4,7 @@
     <title>Public Policy Modelling</title>
     <meta charset="utf-8" />
     <meta name="author" content="William Godfred Cantah (Ph.D)" />
-    <meta name="date" content="2026-01-13" />
+    <meta name="date" content="2026-01-14" />
     <script src="libs/header-attrs-2.30/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/panelset-0.3.0/panelset.css" rel="stylesheet" />
@@ -1881,6 +1881,106 @@ class: inverse center middle
 - These factors are captured by what the literature calls "interactive fixed effects": the interaction between unit-specific sensitivities (***factor loadings***) and common time shocks (***latent factors***)
 
 - Thus, a simple DiD will give a biased, misleading estimate of LEAP's impact, requiring a better way to construct a counterfactual. 
+
+---
+# Multiple Treatment &amp; Staggered Adoption
+
+.center[&lt;img src="img/sdid7.png" width="100%"/&gt; ]
+
+---
+# Interactive Fixed Effects Models
+&lt;div style= "font-size: 26px;"&gt;
+
+--
+.pull-left[
+- This model captures the source of parallel trends problem 
+
+- `\(f_t\)` .my-coral[**Latent Factors):**] unobserved common shocks affecting all districts (e.g., national inflation, changes in trade policy)
+
+- `\(\lambda_i\)` .my-coral[**Factors Loadings):**] captures how sensitive each district `\(i\)` is to those shocks (e.g., an agricultural district's sensitivity to rainfall shocks vs. urban district's)
+
+- The term `\(\lambda_i*f_t\)` is the .my-coral[**interactive fixed effects**]. It generalises  standard DiD and provides the foundation for Generalised Synthetic Control. 
+
+]
+
+--
+.pull-right[
+.center[&lt;img src="img/sdid8.png" width="140%"/&gt; ]
+
+.center[&lt;img src="img/sdid9.png" width="140%"/&gt; ]
+
+]
+---
+# Interactive Fixed Effects Models
+&lt;div style= "font-size: 27px;"&gt;
+
+--
+
+- The generalised synthetic control (GSC) method as proposed by Xu (2017) unifies the SCM with the fixed Effects models. It is based on the Interactive Fixed Effects (IFE) Model. 
+
+.center[&lt;img src="img/sdid3.png" width="100%"/&gt; ]
+
+- This structure is far more porwerful than the standard two-way fixed effects. It explicitly models how units can have hetrogeneous responses to common time-varying confounders, relaxing the parallel trends assumption. 
+
+---
+# The GSC Method
+.center[&lt;img src="img/sdid10.png" width="100%"/&gt; ]
+
+
+---
+# Application
+&lt;div style= "font-size: 22px;"&gt;
+--
+.pull-left[
+- Xu(2017) applied the GSC to analyse state-level voter turnout in US presidential elections (1920-2012). The treatment is the adoption of  Event Data Recorders (EDR) laws
+
+.center[&lt;img src="img/sdid4.png" width="100%"/&gt; ]
+]
+
+.pull-right[
+.center[&lt;img src="img/sdid5.png" width="140%"/&gt; ]
+
+
+]
+
+
+---
+# Balancing Act
+.center[&lt;img src="img/sdid12.png" width="100%"/&gt; ]
+
+---
+# Partially Pooled SCM
+
+.center[&lt;img src="img/sdid13.png" width="100%"/&gt; ]
+
+---
+# The Balance Possibility Frontier
+
+.center[&lt;img src="img/sdid14.png" width="100%"/&gt; ]
+
+---
+# The Synthetic DiD Estimator
+
+.center[&lt;img src="img/sdid15.png" width="100%"/&gt; ]
+
+---
+
+# Diagnostic &amp; Inference
+
+.center[&lt;img src="img/sdid16.png" width="100%"/&gt; ]
+
+---
+
+# Best Practices for Design Transparency &amp; Reporting
+
+.center[&lt;img src="img/sdid17.png" width="100%"/&gt; ]
+
+
+---
+
+# Evolving Toolkit for Causal Inference
+
+.center[&lt;img src="img/sdid18.png" width="100%"/&gt; ]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
